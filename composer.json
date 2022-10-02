@@ -1,8 +1,13 @@
 {
     "name": "dp_and_phppackage/simple_query_builder",
+    "description": "the first composer package",
+    "type": "php",
+    "license": "bbb",
+    "homepage": "https://github.com/frosty1222/SimpleQueryBuilder.git",
     "autoload": {
         "psr-4": {
-           "queryBuilder\\":"simple_query_builder/"
+           "queryBuilder\\":"src/",
+           "core\\":"core/"
         }
     },
     "authors": [
@@ -11,6 +16,10 @@
             "email": "lodong601@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^6.1"
