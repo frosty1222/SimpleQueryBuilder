@@ -1,5 +1,8 @@
 <?php require_once __DIR__ . '/vendor/autoload.php';
+  use queryBuilder\Config\Database;
+  use queryBuilder\Config\DotEnv;
   use queryBuilder\Test\Book;
+  (new DotEnv(__DIR__ . '/.env'))->load();
 ?>
 <!DOCTYPE html>
 <html lang="">
@@ -24,6 +27,9 @@
             <?php
                $book = new Book();
                $getAll = $book->getAllData();
+               $database = new Database();
+               dump($database);
+            //    dump($getAll);
             ?>
          <div class="container">
             <div class="row">

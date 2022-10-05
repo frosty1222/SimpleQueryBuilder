@@ -1,18 +1,18 @@
 <?php
 namespace queryBuilder\Config;
 use PDO;
+use Dotenv\Dotenv;
 class Database
 {
     public $db;
-    public $user = 'root';
-    public $pass = '12345';
+    public $user;
+    public $pass;
     public $charset = 'utf8mb4';
     private static $bdd = null;
-    public function __construct($db){
-      $this->db = $db;
-      $this->user;
-      $this->pass;
-      $this->charset;
+    public function __construct(){
+      $this->db = $_ENV['DBNAME'];
+      $this->user = $_ENV['USERNAME'];
+      $this->pass = $_ENV['PASSWORD'];
     }
     public function getDB(){
         $dsn = "mysql:dbname=$this->db;charset=$this->charset";

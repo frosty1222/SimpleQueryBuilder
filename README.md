@@ -14,32 +14,39 @@
 ![](../simple_query_builder/photo/folder.png)
 # kết nối database sử dụng PDO
 ```php
-    <?php
-    namespace queryBuilder\Config;
-    use PDO;
-    class Database
-    {
-        public $db;
-        public $user = 'root';
-        public $pass = '12345';
-        public $charset = 'utf8mb4';
-        private static $bdd = null;
-        public function __construct($db){
-        $this->db = $db;
-        $this->user;
-        $this->pass;
-        $this->charset;
-        }
-        public function getDB(){
-            $dsn = "mysql:dbname=$this->db;charset=$this->charset";
-            try {
-                self::$bdd = new \PDO($dsn, $this->user, $this->pass);
-        } catch (\PDOException $e) {
-                throw new \PDOException($e->getMessage(), (int)$e->getCode());
-        }
-        return self::$bdd;
-        }
+<?php
+namespace queryBuilder\Config;
+use PDO;
+use Dotenv\Dotenv;
+class Database
+{
+    public $db;
+    public $user;
+    public $pass;
+    public $charset = 'utf8mb4';
+    private static $bdd = null;
+    public function __construct(){
+      $this->db = $_ENV['DBNAME'];
+      $this->user = $_ENV['USERNAME'];
+      $this->pass = $_ENV['PASSWORD'];
     }
+    public function getDB(){
+        $dsn = "mysql:dbname=$this->db;charset=$this->charset";
+        try {
+            self::$bdd = new \PDO($dsn, $this->user, $this->pass);
+       } catch (\PDOException $e) {
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+       }
+       return self::$bdd;
+    }
+}
+```
+```
+muốn dùng hay muốn đổi tên thì chỉ cần đổi trong file .env '
+- trong file gốc tạo ra file .env và cấu trúc như sau 
+USERNAME =root// tên username 
+PASSWORD = 12345// mật khẩu nếu có 
+DBNAME = exampleDB// tên database 
 ```
 # giải thích về các class và interface có trong bài 
 ```angular2html
@@ -86,17 +93,22 @@
 ```php
 <?php
 namespace queryBuilder\Test;
-use queryBuilder\Models\BookModel\BookRepository;
+use queryBuilder\SimpleModel\ResourceRepository;
+use queryBuilder\Models\BookModel\BookModel;
 class Book{
-     public function getAllData(){
-        $bookRepository = new BookRepository();
-        return $bookRepository->getAll('books');
-     }
+  public $respository; 
+  public function __construct(){
+    // gọi đến resource repository rồi truyền vào tên bảng và model tương ứng của bảng 
+     $this->respository = new ResourceRepository('books',new BookModel());
+  }
+  public function getAllData(){
+      return $this->respository->getAll();
+  }
 }
 // mô tả
 =>class Book biểu thị cho một table mà mình muốn làm việc với, trong ví dụ này mình đang 
 làm việc với Book Table nên mình đặt tên là Book
-=> trong class này mình sẽ gọi tới BookRepository để gọi tới các hàm của nó 
+=> trong class này mình sẽ gọi tới ResourceRepository để gọi tới các hàm của nó , và thêm vào parameter là bảng mà bạn muốn dùng và khởi tạo mới model cho model của bảng 
 =>ví dụ trong bài này mình gọi tới hàm getAll(); hàm này có tác dụng lấy hết toàn bộ 
 dữ liệu có trong bảng books 
 ```
@@ -104,8 +116,44 @@ dữ liệu có trong bảng books
 **cách sử dụng**
 ```php
 trong file index.php ta gọi tới class Book và require vendor để sử dụng một số tính năng 
-của nó như lò hàm dump() và các class đã autoload 
+của nó như là hàm dump() và các class đã autoload;
 ==> kết quả như ảnh bên dưới
+```
+```php
+// nếu muốn tạo một bảng mới thì bạn phải tạo 1 bảng mới trong database rồi tạo model mới cho bảng đó với cấu trúc như sau 
+<?php
+namespace queryBuilder\Models\BookModel;
+use core\Model;
+class BookModel extends Model{
+    private $id;
+    private $name;
+    private $description;
+    private $author;
+    public function getId(){
+        return $this->id;
+    }
+    public function setId($id){
+        $this->id = $id;
+    }
+    public function getName(){
+        return $this->name;
+    }
+    public function setName($name){
+        $this->name = $name;
+    }
+    public function getDescription(){
+        return $this->description;
+    }
+    public function setDescription($description){
+        $this->description = $description;
+    }
+    public function getAuthor(){
+        return $this->author;
+    }
+    public function setAuthor($author){
+        $this->author = $author;
+    }
+}
 ```
 ![](../simple_query_builder/photo/table.png)
 **bên dưới là ảnh của table và cách gọi các hàm get trong BookModel**

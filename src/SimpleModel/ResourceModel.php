@@ -7,12 +7,16 @@ class ResourceModel implements ModelInterface{
      protected $table;
      protected $id;
      protected $model;
+     public function __construct()
+     {
+      $this->connect = new Database();
+     }
      public function __init($table,$id,$model)
      {
-        $this->connect = new Database('exampleDB');
         $this->id = $id;
         $this->table = $table;
         $this->model = $model;
+        $this->connect = new Database();
      }
      public function save($model){
       $arrayModel = $model->getProperties();

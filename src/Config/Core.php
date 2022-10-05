@@ -5,6 +5,6 @@ class Core{
     public function __construct()
     {
         $model = new Model();
-        $database = new Database('exampleDB');
+        $database = new Database();
     }
 }
